@@ -12,16 +12,12 @@ const Wishlist = () => {
   }, []);
 
   const removeFromWishlist = (itemId) => {
-    // Update the wishlist by removing the item with the specified ID
     const updatedWishlist = { ...wishlist };
     delete updatedWishlist[itemId];
     setWishlist(updatedWishlist);
 
-    // Update local storage with the new wishlist
     localStorage.setItem('wishlist', JSON.stringify(updatedWishlist));
     setAlertMessage('Item removed from wishlist');
-
-    // Clear the alert message after 3 seconds
     setTimeout(() => {
       setAlertMessage('');
     }, 3000);
@@ -43,13 +39,13 @@ const Wishlist = () => {
               key={item.id}
               style={{
                 boxShadow: 'rgba(149, 157, 165, 0.2) 0px 8px 24px',
+                flexDirection: 'column',
+                alignItems: 'center', 
+                borderRadius:'6px',
                 margin: '10px',
                 padding: '16px',
                 width: '140px',
                 display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center', 
-                borderRadius:'6px',
                 justifyContent:'space-between'
               }}
             >
