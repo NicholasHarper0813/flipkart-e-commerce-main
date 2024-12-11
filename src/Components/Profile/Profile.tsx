@@ -1,18 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import Navbar from '../Navbar/Navbar';
 import { HiOutlinePencilAlt } from 'react-icons/hi';
+import React, { useState, useEffect } from 'react';
 import { PiPackageFill } from "react-icons/pi";
-import { FaHeart } from "react-icons/fa";
-import Order from '../Order/Order';
 import Wishlist from '../Wishlist/Wishlist';
+import { FaHeart } from "react-icons/fa";
+import Navbar from '../Navbar/Navbar';
+import Order from '../Order/Order';
 
 export default function Profile() {
   const userDetailsString = localStorage.getItem('userDetails');
   const userDetails = userDetailsString ? JSON.parse(userDetailsString) : null;
-
-const[showOrders,setShowOrders]=useState(false);
-const[showWishlist,setShowWishList]=useState(false);
-
+  const[showOrders,setShowOrders]=useState(false);
+  const[showWishlist,setShowWishList]=useState(false);
   const [name, setName] = useState(userDetails?.name || '');
   const [email, setEmail] = useState(userDetails?.email || '');
   const [phoneNo, setPhoneNo] = useState(userDetails?.phoneno || '');
@@ -20,11 +18,8 @@ const[showWishlist,setShowWishList]=useState(false);
     userDetails?.deliveryAddress || ''
   );
   const [userPassword, setUserPassword] = useState(userDetails?.password || '');
-
   const [isEditing, setIsEditing] = useState(false);
-
   const handleSave = () => {
-    // Save updated details to local storage or send to server
     const updatedDetails = {
       ...userDetails,
       name,
@@ -34,23 +29,17 @@ const[showWishlist,setShowWishList]=useState(false);
       password: userPassword,
     };
 
-    // Save to local storage
     localStorage.setItem('userDetails', JSON.stringify(updatedDetails));
-
-    // Exit edit mode
     setIsEditing(false);
   };
 
   useEffect(() => {
   }, [userDetails]);
 
-  //cancel edit option
   const handleCancel = () => {
-    // Exit edit mode
     setIsEditing(false);
   };
 
-  // display order and wishlist
   const handleOrders=()=>{
     setShowOrders(true);
     setShowWishList(false)
