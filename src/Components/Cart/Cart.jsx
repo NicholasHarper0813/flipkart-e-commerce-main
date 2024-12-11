@@ -1,21 +1,19 @@
-// import React from "react";
+import dataProducts from "../../DataBase/Data";
 import { useState, useEffect } from "react";
+import { FaTrashAlt } from "react-icons/fa";
+import { Link } from "react-router-dom";
 import Navbar from "../Navbar/Navbar";
 import "./Cart.css";
-import { Link } from "react-router-dom";
-import { FaTrashAlt } from "react-icons/fa";
-import dataProducts from "../../DataBase/Data";
 
 export default function Cart() {
   const [cartData, setCartData] = useState({});
-
-  //input validation for card details
   const [cardholderName, setCardholderName] = useState("");
   const [cardNumber, setCardNumber] = useState("");
   const [expirationDate, setExpirationDate] = useState("");
   const [cvv, setCVV] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState('');
+  
   useEffect(() => {
     // Load cart data from local storage when the component mounts
     const storedCartDataString = localStorage.getItem("cartData");
@@ -30,11 +28,10 @@ export default function Cart() {
     delete updatedCartData[itemId];
     setCartData(updatedCartData);
 
-    // Update local storage
     localStorage.setItem("cartData", JSON.stringify(updatedCartData));
   };
+  
   const isCartEmpty = Object.values(cartData).length === 0;
-
   const subtotal = Object.keys(cartData).reduce((total, itemId) => {
     const { quantity, price } = cartData[itemId];
     return total + quantity * price;
@@ -42,7 +39,6 @@ export default function Cart() {
 
   const shippingCost = 20.0;
   const totalCost = subtotal + shippingCost;
-
   const handlePay = () => {
     if (!cardholderName || !cardNumber || !expirationDate || !cvv) {
       setErrorMessage("Please fill in all fields");
@@ -52,7 +48,6 @@ export default function Cart() {
       return;
     }
 
-     // Validate card number (Simple check for 16 digits):
      if (!/^\d{16}$/.test(cardNumber)) {
       setErrorMessage("Invalid card number");
       setTimeout(() => {
@@ -61,7 +56,6 @@ export default function Cart() {
       return;
     }
 
-    // Validate expiration date (simple check for the format MM/YYYY):
     if (!/^(0[1-9]|1[0-2])\/\d{4}$/.test(expirationDate)) {
       setErrorMessage("Invalid expiration date. Please use MM/YYYY format");
       setTimeout(() => {
@@ -70,7 +64,6 @@ export default function Cart() {
       return;
     }
 
-    // Validate CVV (simple check for 3 digits):
     if (!/^\d{3}$/.test(cvv)) {
       setErrorMessage("Invalid CVV. It should be a 3-digit number");
       setTimeout(() => {
@@ -79,16 +72,12 @@ export default function Cart() {
       return;
     }
 
-    // If everything is 👌, proceed with the payment logic:
     setSuccessMessage("Order Placed Successfully!");
     setTimeout(() => {
       setSuccessMessage("");
     }, 2000);
 
-    // Create an 'orders' array in local storage
     const orders = JSON.parse(localStorage.getItem('orders')) || [];
-
-    // Create a new order object with the required details
     const newOrder = {
       items: cartData,
       subtotal,
@@ -97,33 +86,24 @@ export default function Cart() {
       timestamp: new Date().toISOString().split('T')[0],
     };
 
-// Add the new order to the orders array
 orders.push(newOrder);
 
-// Update the local storage with the updated orders array
 localStorage.setItem('orders', JSON.stringify(orders));
-
-// Clear the cart data after successful payment
 localStorage.removeItem('cartData');
 setCartData({});
 
-// Clear the success message after 2 seconds
 setTimeout(() => {
   setSuccessMessage("");
 }, 6000);
-
-// Clear input fields
 setCardholderName("");
 setCardNumber("");
 setExpirationDate("");
 setCVV("");
-
 };
 
 return (
     <>
       <Navbar />
-      
       {isCartEmpty ? (
         <div className="empty">
           {successMessage&&(
